@@ -73,24 +73,29 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Categoria.vb" />
-    <Compile Include="Comanda.vb" />
-    <Compile Include="Empleado.vb" />
-    <Compile Include="Fichaje.vb" />
-    <Compile Include="Form1.vb">
+    <Compile Include="DAO\CategoriaDAO.vb" />
+    <Compile Include="DAO\ComandaDAO.vb" />
+    <Compile Include="DAO\ConexionBD.vb" />
+    <Compile Include="DAO\EmpleadoDAO.vb" />
+    <Compile Include="DAO\ProductoDAO.vb" />
+    <Compile Include="Entidades\Categoria.vb" />
+    <Compile Include="Entidades\Comanda.vb" />
+    <Compile Include="Entidades\Empleado.vb" />
+    <Compile Include="Entidades\Fichaje.vb" />
+    <Compile Include="FORMS\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.vb">
+    <Compile Include="FORMS\Form1.Designer.vb">
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormTPV.Designer.vb">
+    <Compile Include="FORMS\FormTPV.Designer.vb">
       <DependentUpon>FormTPV.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormTPV.vb">
+    <Compile Include="FORMS\FormTPV.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LineaComanda.vb" />
+    <Compile Include="Entidades\LineaComanda.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -106,10 +111,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Producto.vb" />
+    <Compile Include="Entidades\Producto.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FormTPV.resx">
+    <EmbeddedResource Include="FORMS\FormTPV.resx">
       <DependentUpon>FormTPV.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">

@@ -1,4 +1,4 @@
-﻿Public Class Categoria
+﻿Public Class CategoriaDAO
     Public Property IdCategoria As Integer
     Public Property Nombre As String
 
