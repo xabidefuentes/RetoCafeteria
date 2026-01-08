@@ -180,7 +180,7 @@ Partial Class TPVCafeteria
         Me.panelLogin.Controls.Add(Me.txtDNI)
         Me.panelLogin.Controls.Add(Me.lblPassword)
         Me.panelLogin.Controls.Add(Me.lblDNI)
-        Me.panelLogin.Location = New System.Drawing.Point(411, 52)
+        Me.panelLogin.Location = New System.Drawing.Point(387, 102)
         Me.panelLogin.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.panelLogin.Name = "panelLogin"
         Me.panelLogin.Size = New System.Drawing.Size(339, 487)
