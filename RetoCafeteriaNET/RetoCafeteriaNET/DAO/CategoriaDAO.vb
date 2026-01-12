@@ -1,9 +1,9 @@
 ﻿Imports System.Data.SqlClient
-Imports MySql.Data.MySqlClient
+Imports System.Data
 
 ' =============================================
 ' Clase: CategoriaDAO
-' Acceso a datos de Categorías
+' Acceso a datos de Categorías usando ADO.NET
 ' =============================================
 Public Class CategoriaDAO
 
@@ -12,13 +12,13 @@ Public Class CategoriaDAO
         Dim categorias As New List(Of Categoria)
 
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "SELECT idCategoria, nombre FROM CATEGORIA ORDER BY nombre"
 
-                Using cmd As New MySqlCommand(query, conn)
-                    Using reader As MySqlDataReader = cmd.ExecuteReader()
+                Using cmd As New SqlCommand(query, conn)
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
                         While reader.Read()
                             categorias.Add(New Categoria With {
                                 .IdCategoria = Convert.ToInt32(reader("idCategoria")),
@@ -40,13 +40,13 @@ Public Class CategoriaDAO
         Dim categorias As New List(Of Categoria)
 
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "SELECT idCategoria, nombre FROM CATEGORIA WHERE idCategoria >= 5 ORDER BY nombre"
 
-                Using cmd As New MySqlCommand(query, conn)
-                    Using reader As MySqlDataReader = cmd.ExecuteReader()
+                Using cmd As New SqlCommand(query, conn)
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
                         While reader.Read()
                             categorias.Add(New Categoria With {
                                 .IdCategoria = Convert.ToInt32(reader("idCategoria")),
@@ -68,13 +68,13 @@ Public Class CategoriaDAO
         Dim categorias As New List(Of Categoria)
 
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "SELECT idCategoria, nombre FROM CATEGORIA WHERE idCategoria <= 4 ORDER BY nombre"
 
-                Using cmd As New MySqlCommand(query, conn)
-                    Using reader As MySqlDataReader = cmd.ExecuteReader()
+                Using cmd As New SqlCommand(query, conn)
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
                         While reader.Read()
                             categorias.Add(New Categoria With {
                                 .IdCategoria = Convert.ToInt32(reader("idCategoria")),
@@ -96,15 +96,15 @@ Public Class CategoriaDAO
         Dim categoria As Categoria = Nothing
 
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "SELECT idCategoria, nombre FROM CATEGORIA WHERE idCategoria = @idCategoria"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@idCategoria", idCategoria)
 
-                    Using reader As MySqlDataReader = cmd.ExecuteReader()
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
                         If reader.Read() Then
                             categoria = New Categoria With {
                                 .idCategoria = Convert.ToInt32(reader("idCategoria")),
@@ -121,15 +121,34 @@ Public Class CategoriaDAO
         Return categoria
     End Function
 
+    ' Obtener categorías usando DataAdapter y DataSet
+    Public Shared Function ObtenerTodasConDataSet() As DataSet
+        Dim ds As New DataSet()
+
+        Try
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
+                Dim query As String = "SELECT idCategoria, nombre FROM CATEGORIA ORDER BY nombre"
+
+                Using adapter As New SqlDataAdapter(query, conn)
+                    adapter.Fill(ds, "Categorias")
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al obtener categorías: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return ds
+    End Function
+
     ' Insertar nueva categoría
     Public Shared Function Insertar(categoria As Categoria) As Boolean
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "INSERT INTO CATEGORIA (nombre) VALUES (@nombre)"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@nombre", categoria.Nombre)
                     Return cmd.ExecuteNonQuery() > 0
                 End Using
@@ -143,12 +162,12 @@ Public Class CategoriaDAO
     ' Actualizar categoría
     Public Shared Function Actualizar(categoria As Categoria) As Boolean
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "UPDATE CATEGORIA SET nombre = @nombre WHERE idCategoria = @idCategoria"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@nombre", categoria.Nombre)
                     cmd.Parameters.AddWithValue("@idCategoria", categoria.IdCategoria)
                     Return cmd.ExecuteNonQuery() > 0
@@ -163,12 +182,12 @@ Public Class CategoriaDAO
     ' Eliminar categoría
     Public Shared Function Eliminar(idCategoria As Integer) As Boolean
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "DELETE FROM CATEGORIA WHERE idCategoria = @idCategoria"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@idCategoria", idCategoria)
                     Return cmd.ExecuteNonQuery() > 0
                 End Using

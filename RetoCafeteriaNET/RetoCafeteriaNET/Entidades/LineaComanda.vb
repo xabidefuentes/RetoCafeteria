@@ -16,4 +16,8 @@
         Me.NombreProducto = nombreProducto
         Me.Descuento = 0
     End Sub
+
+    Public Sub New()
+        Me.Descuento = 0
+    End Sub
 End Class

@@ -21,7 +21,7 @@ Public Class TPVCafeteria
 
     End Sub
 
-    Private Sub panelLogin_Paint(sender As Object, e As PaintEventArgs) Handles panelLogin.Paint
+    Private Sub panelLogin_Paint(sender As Object, e As PaintEventArgs)
 
     End Sub
 
@@ -37,11 +37,11 @@ Public Class TPVCafeteria
 
     End Sub
 
-    Private Sub lblDNI_Click(sender As Object, e As EventArgs) Handles lblDNI.Click
+    Private Sub lblDNI_Click(sender As Object, e As EventArgs)
 
     End Sub
 
-    Private Sub txtPassword_TextChanged(sender As Object, e As EventArgs) Handles txtPassword.TextChanged
+    Private Sub txtPassword_TextChanged(sender As Object, e As EventArgs)
 
     End Sub
 
@@ -50,6 +50,10 @@ Public Class TPVCafeteria
     End Sub
 
     Private Sub dgvTicket_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTicket.CellContentClick
+
+    End Sub
+
+    Private Sub btnCerrarSesion_Click(sender As Object, e As EventArgs) Handles btnCerrarSesion.Click
 
     End Sub
 End Class

@@ -1,9 +1,9 @@
 ﻿Imports System.Data.SqlClient
-Imports MySql.Data.MySqlClient
+Imports System.Data
 
 ' =============================================
 ' Clase: ProductoDAO
-' Acceso a datos de Productos
+' Acceso a datos de Productos usando ADO.NET
 ' =============================================
 Public Class ProductoDAO
 
@@ -12,13 +12,13 @@ Public Class ProductoDAO
         Dim productos As New List(Of Producto)
 
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "SELECT idProducto, nombre, precio, stock, idCategoria FROM PRODUCTOS ORDER BY nombre"
 
-                Using cmd As New MySqlCommand(query, conn)
-                    Using reader As MySqlDataReader = cmd.ExecuteReader()
+                Using cmd As New SqlCommand(query, conn)
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
                         While reader.Read()
                             productos.Add(New Producto With {
                                 .IdProducto = Convert.ToInt32(reader("idProducto")),
@@ -43,15 +43,15 @@ Public Class ProductoDAO
         Dim productos As New List(Of Producto)
 
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "SELECT idProducto, nombre, precio, stock, idCategoria FROM PRODUCTOS WHERE idCategoria = @idCategoria ORDER BY nombre"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@idCategoria", idCategoria)
 
-                    Using reader As MySqlDataReader = cmd.ExecuteReader()
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
                         While reader.Read()
                             productos.Add(New Producto With {
                                 .IdProducto = Convert.ToInt32(reader("idProducto")),
@@ -76,15 +76,15 @@ Public Class ProductoDAO
         Dim producto As Producto = Nothing
 
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "SELECT idProducto, nombre, precio, stock, idCategoria FROM PRODUCTOS WHERE idProducto = @idProducto"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@idProducto", idProducto)
 
-                    Using reader As MySqlDataReader = cmd.ExecuteReader()
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
                         If reader.Read() Then
                             producto = New Producto With {
                                 .IdProducto = Convert.ToInt32(reader("idProducto")),
@@ -104,15 +104,34 @@ Public Class ProductoDAO
         Return producto
     End Function
 
+    ' Obtener productos usando DataAdapter y DataSet
+    Public Shared Function ObtenerTodosConDataSet() As DataSet
+        Dim ds As New DataSet()
+
+        Try
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
+                Dim query As String = "SELECT idProducto, nombre, precio, stock, idCategoria FROM PRODUCTOS ORDER BY nombre"
+
+                Using adapter As New SqlDataAdapter(query, conn)
+                    adapter.Fill(ds, "Productos")
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al obtener productos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return ds
+    End Function
+
     ' Actualizar stock (restar cantidad vendida)
     Public Shared Function ActualizarStock(idProducto As Integer, cantidad As Integer) As Boolean
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "UPDATE PRODUCTOS SET stock = stock - @cantidad WHERE idProducto = @idProducto"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@cantidad", cantidad)
                     cmd.Parameters.AddWithValue("@idProducto", idProducto)
 
@@ -125,15 +144,36 @@ Public Class ProductoDAO
         End Try
     End Function
 
+    ' Devolver stock (sumar cantidad cuando se anula)
+    Public Shared Function DevolverStock(idProducto As Integer, cantidad As Integer) As Boolean
+        Try
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
+                conn.Open()
+
+                Dim query As String = "UPDATE PRODUCTOS SET stock = stock + @cantidad WHERE idProducto = @idProducto"
+
+                Using cmd As New SqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@cantidad", cantidad)
+                    cmd.Parameters.AddWithValue("@idProducto", idProducto)
+
+                    Return cmd.ExecuteNonQuery() > 0
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al devolver stock: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        End Try
+    End Function
+
     ' Verificar stock disponible
     Public Shared Function VerificarStock(idProducto As Integer, cantidad As Integer) As Boolean
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "SELECT stock FROM PRODUCTOS WHERE idProducto = @idProducto"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@idProducto", idProducto)
 
                     Dim stock As Object = cmd.ExecuteScalar()
@@ -152,12 +192,12 @@ Public Class ProductoDAO
     ' Insertar nuevo producto
     Public Shared Function Insertar(producto As Producto) As Boolean
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "INSERT INTO PRODUCTOS (nombre, precio, stock, idCategoria) VALUES (@nombre, @precio, @stock, @idCategoria)"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@nombre", producto.Nombre)
                     cmd.Parameters.AddWithValue("@precio", producto.Precio)
                     cmd.Parameters.AddWithValue("@stock", producto.Stock)
@@ -175,12 +215,12 @@ Public Class ProductoDAO
     ' Actualizar producto
     Public Shared Function Actualizar(producto As Producto) As Boolean
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "UPDATE PRODUCTOS SET nombre = @nombre, precio = @precio, stock = @stock, idCategoria = @idCategoria WHERE idProducto = @idProducto"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@nombre", producto.Nombre)
                     cmd.Parameters.AddWithValue("@precio", producto.Precio)
                     cmd.Parameters.AddWithValue("@stock", producto.Stock)
@@ -199,12 +239,12 @@ Public Class ProductoDAO
     ' Eliminar producto
     Public Shared Function Eliminar(idProducto As Integer) As Boolean
         Try
-            Using conn As MySqlConnection = ConexionBD.ObtenerConexion()
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
 
                 Dim query As String = "DELETE FROM PRODUCTOS WHERE idProducto = @idProducto"
 
-                Using cmd As New MySqlCommand(query, conn)
+                Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@idProducto", idProducto)
                     Return cmd.ExecuteNonQuery() > 0
                 End Using
