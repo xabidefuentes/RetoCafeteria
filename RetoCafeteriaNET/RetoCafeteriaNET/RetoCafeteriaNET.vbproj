@@ -89,10 +89,10 @@
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FORMS\FormTPV.Designer.vb">
-      <DependentUpon>FormTPV.vb</DependentUpon>
+    <Compile Include="FORMS\TPVCafeteria.Designer.vb">
+      <DependentUpon>TPVCafeteria.vb</DependentUpon>
     </Compile>
-    <Compile Include="FORMS\FormTPV.vb">
+    <Compile Include="FORMS\TPVCafeteria.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Entidades\LineaComanda.vb" />
@@ -121,8 +121,8 @@
     <Compile Include="Entidades\Producto.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FORMS\FormTPV.resx">
-      <DependentUpon>FormTPV.vb</DependentUpon>
+    <EmbeddedResource Include="FORMS\TPVCafeteria.resx">
+      <DependentUpon>TPVCafeteria.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FORMS\MenuEmpleados.resx">
       <DependentUpon>MenuEmpleados.vb</DependentUpon>
