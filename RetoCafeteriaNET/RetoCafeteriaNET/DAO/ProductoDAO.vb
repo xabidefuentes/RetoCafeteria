@@ -1,11 +1,57 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Data
 
-' =============================================
-' Clase: ProductoDAO
-' Acceso a datos de Productos usando ADO.NET
-' =============================================
 Public Class ProductoDAO
+
+
+    Public Shared Function ObtenerPorNombre(nombre As String) As Producto
+        Dim producto As Producto = Nothing
+        Try
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
+                conn.Open()
+                Dim query As String = "SELECT idProducto, nombre, precio, stock, idCategoria FROM PRODUCTOS WHERE nombre = @nombre"
+                Using cmd As New SqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@nombre", nombre)
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
+                        If reader.Read() Then
+                            producto = New Producto With {
+                            .IdProducto = Convert.ToInt32(reader("idProducto")),
+                            .Nombre = reader("nombre").ToString(),
+                            .Precio = Convert.ToDecimal(reader("precio")),
+                            .Stock = Convert.ToInt32(reader("stock")),
+                            .IdCategoria = Convert.ToInt32(reader("idCategoria"))
+                        }
+                        End If
+                    End Using
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al obtener producto por nombre: " & ex.Message & vbCrLf & "Nombre buscado: " & nombre, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        Return producto
+    End Function
+
+    Public Shared Function ActualizarStock(idProducto As Integer, nuevoStock As Integer) As Boolean
+        Try
+            Dim query As String = "UPDATE productos SET stock = @stock WHERE idProducto = @id"
+
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
+                Using cmd As New SqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@stock", nuevoStock)
+                    cmd.Parameters.AddWithValue("@id", idProducto)
+
+                    conn.Open()
+                    Dim filasAfectadas As Integer = cmd.ExecuteNonQuery()
+                    Return filasAfectadas > 0
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al actualizar stock: " & ex.Message)
+            Return False
+        End Try
+    End Function
+
+
 
     ' Obtener todos los productos
     Public Shared Function ObtenerTodos() As List(Of Producto)
@@ -74,33 +120,28 @@ Public Class ProductoDAO
     ' Obtener producto por ID
     Public Shared Function ObtenerPorId(idProducto As Integer) As Producto
         Dim producto As Producto = Nothing
-
         Try
             Using conn As SqlConnection = ConexionBD.ObtenerConexion()
                 conn.Open()
-
                 Dim query As String = "SELECT idProducto, nombre, precio, stock, idCategoria FROM PRODUCTOS WHERE idProducto = @idProducto"
-
                 Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@idProducto", idProducto)
-
                     Using reader As SqlDataReader = cmd.ExecuteReader()
                         If reader.Read() Then
                             producto = New Producto With {
-                                .IdProducto = Convert.ToInt32(reader("idProducto")),
-                                .Nombre = reader("nombre").ToString(),
-                                .Precio = Convert.ToDecimal(reader("precio")),
-                                .Stock = Convert.ToInt32(reader("stock")),
-                                .IdCategoria = Convert.ToInt32(reader("idCategoria"))
-                            }
+                            .IdProducto = Convert.ToInt32(reader("idProducto")),
+                            .Nombre = reader("nombre").ToString(),
+                            .Precio = Convert.ToDecimal(reader("precio")),
+                            .Stock = Convert.ToInt32(reader("stock")),
+                            .IdCategoria = Convert.ToInt32(reader("idCategoria"))
+                        }
                         End If
                     End Using
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("Error al obtener producto: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error al obtener producto por ID: " & ex.Message & vbCrLf & "ID buscado: " & idProducto, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
-
         Return producto
     End Function
 
@@ -123,26 +164,7 @@ Public Class ProductoDAO
         Return ds
     End Function
 
-    ' Actualizar stock (restar cantidad vendida)
-    Public Shared Function ActualizarStock(idProducto As Integer, cantidad As Integer) As Boolean
-        Try
-            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
-                conn.Open()
 
-                Dim query As String = "UPDATE PRODUCTOS SET stock = stock - @cantidad WHERE idProducto = @idProducto"
-
-                Using cmd As New SqlCommand(query, conn)
-                    cmd.Parameters.AddWithValue("@cantidad", cantidad)
-                    cmd.Parameters.AddWithValue("@idProducto", idProducto)
-
-                    Return cmd.ExecuteNonQuery() > 0
-                End Using
-            End Using
-        Catch ex As Exception
-            MessageBox.Show("Error al actualizar stock: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return False
-        End Try
-    End Function
 
     ' Devolver stock (sumar cantidad cuando se anula)
     Public Shared Function DevolverStock(idProducto As Integer, cantidad As Integer) As Boolean

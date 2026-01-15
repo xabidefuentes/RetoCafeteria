@@ -1,10 +1,6 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Data
 
-' =============================================
-' Clase: ComandaDAO
-' Acceso a datos de Comandas usando ADO.NET
-' =============================================
 Public Class ComandaDAO
 
     ' Crear nueva comanda y devolver su ID

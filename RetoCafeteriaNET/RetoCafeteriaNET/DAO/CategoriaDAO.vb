@@ -1,10 +1,5 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Data
-
-' =============================================
-' Clase: CategoriaDAO
-' Acceso a datos de Categorías usando ADO.NET
-' =============================================
 Public Class CategoriaDAO
 
     ' Obtener todas las categorías
@@ -35,7 +30,7 @@ Public Class CategoriaDAO
         Return categorias
     End Function
 
-    ' Obtener categorías de productos (IDs del 5 al 9 según el SQL)
+    ' Obtener categorías de productos
     Public Shared Function ObtenerCategoriasProductos() As List(Of Categoria)
         Dim categorias As New List(Of Categoria)
 
@@ -63,7 +58,7 @@ Public Class CategoriaDAO
         Return categorias
     End Function
 
-    ' Obtener categorías de empleados (IDs del 1 al 4 según el SQL)
+    ' Obtener categorías de empleados
     Public Shared Function ObtenerCategoriasEmpleados() As List(Of Categoria)
         Dim categorias As New List(Of Categoria)
 

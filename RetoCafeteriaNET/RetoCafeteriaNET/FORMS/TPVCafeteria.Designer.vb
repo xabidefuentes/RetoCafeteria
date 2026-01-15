@@ -24,9 +24,6 @@ Partial Class TPVCafeteria
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TPVCafeteria))
         Me.PanelTPV = New System.Windows.Forms.Panel()
-        Me.panelDerecha = New System.Windows.Forms.Panel()
-        Me.lblProductosTitulo = New System.Windows.Forms.Label()
-        Me.lblCategoriasTitulo = New System.Windows.Forms.Label()
         Me.panelIzquierda = New System.Windows.Forms.Panel()
         Me.txtDTO = New System.Windows.Forms.TextBox()
         Me.txtSubtotal = New System.Windows.Forms.TextBox()
@@ -59,14 +56,22 @@ Partial Class TPVCafeteria
         Me.dto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.total = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.panelHeader = New System.Windows.Forms.Panel()
+        Me.btnStock = New System.Windows.Forms.Button()
+        Me.btnTiempo = New System.Windows.Forms.Button()
         Me.lblUsuario = New System.Windows.Forms.Label()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.btnCerrarSesion = New System.Windows.Forms.Button()
+        Me.btnCambiarEmpleado = New System.Windows.Forms.Button()
         Me.lblCafeteria = New System.Windows.Forms.Label()
-        Me.panelCategoriasGrid = New System.Windows.Forms.FlowLayoutPanel()
+        Me.panelDerecha = New System.Windows.Forms.Panel()
         Me.panelProductosGrid = New System.Windows.Forms.FlowLayoutPanel()
+        Me.panelCategoriasGrid = New System.Windows.Forms.FlowLayoutPanel()
+        Me.lblProductosTitulo = New System.Windows.Forms.Label()
+        Me.lblCategoriasTitulo = New System.Windows.Forms.Label()
+        Me.panelLogin = New System.Windows.Forms.Panel()
+        Me.btnSeleccionar = New System.Windows.Forms.Button()
+        Me.dgvEmpleados = New System.Windows.Forms.DataGridView()
+        Me.lblDNI = New System.Windows.Forms.Label()
         Me.PanelTPV.SuspendLayout()
-        Me.panelDerecha.SuspendLayout()
         Me.panelIzquierda.SuspendLayout()
         Me.panelInferiorIzq.SuspendLayout()
         Me.PanelTeclado.SuspendLayout()
@@ -74,55 +79,21 @@ Partial Class TPVCafeteria
         CType(Me.dgvTicket, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelHeader.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.panelDerecha.SuspendLayout()
+        Me.panelLogin.SuspendLayout()
+        CType(Me.dgvEmpleados, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'PanelTPV
         '
-        Me.PanelTPV.Controls.Add(Me.panelDerecha)
         Me.PanelTPV.Controls.Add(Me.panelIzquierda)
         Me.PanelTPV.Controls.Add(Me.panelHeader)
+        Me.PanelTPV.Controls.Add(Me.panelDerecha)
         Me.PanelTPV.Location = New System.Drawing.Point(0, 0)
         Me.PanelTPV.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.PanelTPV.Name = "PanelTPV"
         Me.PanelTPV.Size = New System.Drawing.Size(1545, 780)
         Me.PanelTPV.TabIndex = 0
-        '
-        'panelDerecha
-        '
-        Me.panelDerecha.BackColor = System.Drawing.Color.FloralWhite
-        Me.panelDerecha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.panelDerecha.Controls.Add(Me.panelProductosGrid)
-        Me.panelDerecha.Controls.Add(Me.panelCategoriasGrid)
-        Me.panelDerecha.Controls.Add(Me.lblProductosTitulo)
-        Me.panelDerecha.Controls.Add(Me.lblCategoriasTitulo)
-        Me.panelDerecha.Font = New System.Drawing.Font("Lucida Sans Unicode", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.panelDerecha.Location = New System.Drawing.Point(570, 77)
-        Me.panelDerecha.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
-        Me.panelDerecha.Name = "panelDerecha"
-        Me.panelDerecha.Size = New System.Drawing.Size(966, 731)
-        Me.panelDerecha.TabIndex = 2
-        '
-        'lblProductosTitulo
-        '
-        Me.lblProductosTitulo.AutoSize = True
-        Me.lblProductosTitulo.Font = New System.Drawing.Font("Bahnschrift SemiBold SemiConden", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductosTitulo.Location = New System.Drawing.Point(433, 269)
-        Me.lblProductosTitulo.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
-        Me.lblProductosTitulo.Name = "lblProductosTitulo"
-        Me.lblProductosTitulo.Size = New System.Drawing.Size(126, 29)
-        Me.lblProductosTitulo.TabIndex = 2
-        Me.lblProductosTitulo.Text = "PRODUCTOS"
-        '
-        'lblCategoriasTitulo
-        '
-        Me.lblCategoriasTitulo.AutoSize = True
-        Me.lblCategoriasTitulo.Font = New System.Drawing.Font("Bahnschrift SemiBold SemiConden", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCategoriasTitulo.Location = New System.Drawing.Point(433, 4)
-        Me.lblCategoriasTitulo.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
-        Me.lblCategoriasTitulo.Name = "lblCategoriasTitulo"
-        Me.lblCategoriasTitulo.Size = New System.Drawing.Size(129, 29)
-        Me.lblCategoriasTitulo.TabIndex = 0
-        Me.lblCategoriasTitulo.Text = "CATEGORIAS"
         '
         'panelIzquierda
         '
@@ -144,61 +115,61 @@ Partial Class TPVCafeteria
         '
         'txtDTO
         '
-        Me.txtDTO.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDTO.Location = New System.Drawing.Point(181, 371)
+        Me.txtDTO.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDTO.Location = New System.Drawing.Point(181, 376)
         Me.txtDTO.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.txtDTO.Name = "txtDTO"
-        Me.txtDTO.Size = New System.Drawing.Size(66, 36)
+        Me.txtDTO.Size = New System.Drawing.Size(66, 40)
         Me.txtDTO.TabIndex = 7
         '
         'txtSubtotal
         '
-        Me.txtSubtotal.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSubtotal.Location = New System.Drawing.Point(339, 371)
+        Me.txtSubtotal.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtSubtotal.Location = New System.Drawing.Point(339, 376)
         Me.txtSubtotal.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.txtSubtotal.Name = "txtSubtotal"
-        Me.txtSubtotal.Size = New System.Drawing.Size(88, 36)
+        Me.txtSubtotal.Size = New System.Drawing.Size(88, 40)
         Me.txtSubtotal.TabIndex = 6
         '
         'txtUDS
         '
-        Me.txtUDS.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUDS.Location = New System.Drawing.Point(57, 371)
+        Me.txtUDS.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtUDS.Location = New System.Drawing.Point(57, 376)
         Me.txtUDS.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.txtUDS.Name = "txtUDS"
-        Me.txtUDS.Size = New System.Drawing.Size(69, 36)
+        Me.txtUDS.Size = New System.Drawing.Size(69, 40)
         Me.txtUDS.TabIndex = 5
         '
         'lblDTO
         '
         Me.lblDTO.AutoSize = True
-        Me.lblDTO.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDTO.Location = New System.Drawing.Point(133, 374)
+        Me.lblDTO.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDTO.Location = New System.Drawing.Point(133, 379)
         Me.lblDTO.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblDTO.Name = "lblDTO"
-        Me.lblDTO.Size = New System.Drawing.Size(45, 29)
+        Me.lblDTO.Size = New System.Drawing.Size(52, 33)
         Me.lblDTO.TabIndex = 4
         Me.lblDTO.Text = "DTO:"
         '
         'lblUDS
         '
         Me.lblUDS.AutoSize = True
-        Me.lblUDS.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblUDS.Location = New System.Drawing.Point(7, 374)
+        Me.lblUDS.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblUDS.Location = New System.Drawing.Point(7, 379)
         Me.lblUDS.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblUDS.Name = "lblUDS"
-        Me.lblUDS.Size = New System.Drawing.Size(46, 29)
+        Me.lblUDS.Size = New System.Drawing.Size(53, 33)
         Me.lblUDS.TabIndex = 3
         Me.lblUDS.Text = "UDS:"
         '
         'lblSubtotal
         '
         Me.lblSubtotal.AutoSize = True
-        Me.lblSubtotal.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSubtotal.Location = New System.Drawing.Point(251, 374)
+        Me.lblSubtotal.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSubtotal.Location = New System.Drawing.Point(251, 379)
         Me.lblSubtotal.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblSubtotal.Name = "lblSubtotal"
-        Me.lblSubtotal.Size = New System.Drawing.Size(84, 29)
+        Me.lblSubtotal.Size = New System.Drawing.Size(95, 33)
         Me.lblSubtotal.TabIndex = 2
         Me.lblSubtotal.Text = "Subtotal:"
         '
@@ -212,7 +183,7 @@ Partial Class TPVCafeteria
         Me.panelInferiorIzq.Location = New System.Drawing.Point(10, 415)
         Me.panelInferiorIzq.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.panelInferiorIzq.Name = "panelInferiorIzq"
-        Me.panelInferiorIzq.Size = New System.Drawing.Size(547, 283)
+        Me.panelInferiorIzq.Size = New System.Drawing.Size(555, 283)
         Me.panelInferiorIzq.TabIndex = 1
         '
         'PanelTeclado
@@ -377,16 +348,16 @@ Partial Class TPVCafeteria
         Me.PanelInfoAcciones.Location = New System.Drawing.Point(220, 8)
         Me.PanelInfoAcciones.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.PanelInfoAcciones.Name = "PanelInfoAcciones"
-        Me.PanelInfoAcciones.Size = New System.Drawing.Size(323, 271)
+        Me.PanelInfoAcciones.Size = New System.Drawing.Size(331, 271)
         Me.PanelInfoAcciones.TabIndex = 1
         '
         'btnCobrar
         '
         Me.btnCobrar.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCobrar.Location = New System.Drawing.Point(65, 102)
+        Me.btnCobrar.Location = New System.Drawing.Point(2, 93)
         Me.btnCobrar.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.btnCobrar.Name = "btnCobrar"
-        Me.btnCobrar.Size = New System.Drawing.Size(131, 70)
+        Me.btnCobrar.Size = New System.Drawing.Size(327, 70)
         Me.btnCobrar.TabIndex = 2
         Me.btnCobrar.Text = "COBRAR"
         Me.btnCobrar.UseVisualStyleBackColor = True
@@ -394,10 +365,10 @@ Partial Class TPVCafeteria
         'btnAnularLinea
         '
         Me.btnAnularLinea.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAnularLinea.Location = New System.Drawing.Point(35, 21)
+        Me.btnAnularLinea.Location = New System.Drawing.Point(2, 4)
         Me.btnAnularLinea.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.btnAnularLinea.Name = "btnAnularLinea"
-        Me.btnAnularLinea.Size = New System.Drawing.Size(202, 61)
+        Me.btnAnularLinea.Size = New System.Drawing.Size(327, 81)
         Me.btnAnularLinea.TabIndex = 1
         Me.btnAnularLinea.Text = "ANULAR LINEA"
         Me.btnAnularLinea.UseVisualStyleBackColor = True
@@ -405,10 +376,10 @@ Partial Class TPVCafeteria
         'btnAnularComanda
         '
         Me.btnAnularComanda.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAnularComanda.Location = New System.Drawing.Point(35, 190)
+        Me.btnAnularComanda.Location = New System.Drawing.Point(2, 171)
         Me.btnAnularComanda.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.btnAnularComanda.Name = "btnAnularComanda"
-        Me.btnAnularComanda.Size = New System.Drawing.Size(202, 59)
+        Me.btnAnularComanda.Size = New System.Drawing.Size(327, 86)
         Me.btnAnularComanda.TabIndex = 0
         Me.btnAnularComanda.Text = "ANULAR COMANDA"
         Me.btnAnularComanda.UseVisualStyleBackColor = True
@@ -419,13 +390,13 @@ Partial Class TPVCafeteria
         Me.dgvTicket.BackgroundColor = System.Drawing.Color.AliceBlue
         Me.dgvTicket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvTicket.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.uds, Me.descripcion, Me.precio, Me.dto, Me.total})
-        Me.dgvTicket.Location = New System.Drawing.Point(-51, -1)
+        Me.dgvTicket.Location = New System.Drawing.Point(-16, -1)
         Me.dgvTicket.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.dgvTicket.Name = "dgvTicket"
         Me.dgvTicket.RowHeadersWidth = 51
         Me.dgvTicket.RowTemplate.DefaultCellStyle.Padding = New System.Windows.Forms.Padding(5, 0, 0, 0)
         Me.dgvTicket.RowTemplate.Height = 24
-        Me.dgvTicket.Size = New System.Drawing.Size(616, 353)
+        Me.dgvTicket.Size = New System.Drawing.Size(642, 371)
         Me.dgvTicket.TabIndex = 0
         '
         'uds
@@ -461,15 +432,17 @@ Partial Class TPVCafeteria
         Me.total.HeaderText = "Total"
         Me.total.MinimumWidth = 6
         Me.total.Name = "total"
-        Me.total.Width = 90
+        Me.total.Width = 120
         '
         'panelHeader
         '
         Me.panelHeader.BackColor = System.Drawing.Color.PowderBlue
         Me.panelHeader.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.panelHeader.Controls.Add(Me.btnStock)
+        Me.panelHeader.Controls.Add(Me.btnTiempo)
         Me.panelHeader.Controls.Add(Me.lblUsuario)
         Me.panelHeader.Controls.Add(Me.PictureBox2)
-        Me.panelHeader.Controls.Add(Me.btnCerrarSesion)
+        Me.panelHeader.Controls.Add(Me.btnCambiarEmpleado)
         Me.panelHeader.Controls.Add(Me.lblCafeteria)
         Me.panelHeader.Location = New System.Drawing.Point(1, 0)
         Me.panelHeader.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
@@ -477,11 +450,33 @@ Partial Class TPVCafeteria
         Me.panelHeader.Size = New System.Drawing.Size(1535, 69)
         Me.panelHeader.TabIndex = 0
         '
+        'btnStock
+        '
+        Me.btnStock.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnStock.Location = New System.Drawing.Point(547, 12)
+        Me.btnStock.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
+        Me.btnStock.Name = "btnStock"
+        Me.btnStock.Size = New System.Drawing.Size(191, 44)
+        Me.btnStock.TabIndex = 6
+        Me.btnStock.Text = "STOCK"
+        Me.btnStock.UseVisualStyleBackColor = True
+        '
+        'btnTiempo
+        '
+        Me.btnTiempo.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTiempo.Location = New System.Drawing.Point(338, 12)
+        Me.btnTiempo.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
+        Me.btnTiempo.Name = "btnTiempo"
+        Me.btnTiempo.Size = New System.Drawing.Size(191, 44)
+        Me.btnTiempo.TabIndex = 5
+        Me.btnTiempo.Text = "Meteorologia"
+        Me.btnTiempo.UseVisualStyleBackColor = True
+        '
         'lblUsuario
         '
         Me.lblUsuario.AutoSize = True
         Me.lblUsuario.Font = New System.Drawing.Font("Bahnschrift SemiBold SemiConden", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblUsuario.Location = New System.Drawing.Point(1231, 18)
+        Me.lblUsuario.Location = New System.Drawing.Point(1129, 18)
         Me.lblUsuario.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblUsuario.Name = "lblUsuario"
         Me.lblUsuario.Size = New System.Drawing.Size(94, 33)
@@ -500,16 +495,16 @@ Partial Class TPVCafeteria
         Me.PictureBox2.TabIndex = 3
         Me.PictureBox2.TabStop = False
         '
-        'btnCerrarSesion
+        'btnCambiarEmpleado
         '
-        Me.btnCerrarSesion.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCerrarSesion.Location = New System.Drawing.Point(1329, 12)
-        Me.btnCerrarSesion.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
-        Me.btnCerrarSesion.Name = "btnCerrarSesion"
-        Me.btnCerrarSesion.Size = New System.Drawing.Size(191, 44)
-        Me.btnCerrarSesion.TabIndex = 2
-        Me.btnCerrarSesion.Text = "Cambiar Empleado"
-        Me.btnCerrarSesion.UseVisualStyleBackColor = True
+        Me.btnCambiarEmpleado.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCambiarEmpleado.Location = New System.Drawing.Point(1329, 12)
+        Me.btnCambiarEmpleado.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
+        Me.btnCambiarEmpleado.Name = "btnCambiarEmpleado"
+        Me.btnCambiarEmpleado.Size = New System.Drawing.Size(191, 44)
+        Me.btnCambiarEmpleado.TabIndex = 2
+        Me.btnCambiarEmpleado.Text = "Cambiar Empleado"
+        Me.btnCambiarEmpleado.UseVisualStyleBackColor = True
         '
         'lblCafeteria
         '
@@ -522,35 +517,118 @@ Partial Class TPVCafeteria
         Me.lblCafeteria.TabIndex = 0
         Me.lblCafeteria.Text = "Café Gaupasa"
         '
-        'panelCategoriasGrid
+        'panelDerecha
         '
-        Me.panelCategoriasGrid.BackColor = System.Drawing.Color.AliceBlue
-        Me.panelCategoriasGrid.Location = New System.Drawing.Point(12, 36)
-        Me.panelCategoriasGrid.Name = "panelCategoriasGrid"
-        Me.panelCategoriasGrid.Size = New System.Drawing.Size(939, 230)
-        Me.panelCategoriasGrid.TabIndex = 4
+        Me.panelDerecha.BackColor = System.Drawing.Color.FloralWhite
+        Me.panelDerecha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.panelDerecha.Controls.Add(Me.panelProductosGrid)
+        Me.panelDerecha.Controls.Add(Me.panelCategoriasGrid)
+        Me.panelDerecha.Controls.Add(Me.lblProductosTitulo)
+        Me.panelDerecha.Controls.Add(Me.lblCategoriasTitulo)
+        Me.panelDerecha.Font = New System.Drawing.Font("Lucida Sans Unicode", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.panelDerecha.Location = New System.Drawing.Point(570, 77)
+        Me.panelDerecha.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
+        Me.panelDerecha.Name = "panelDerecha"
+        Me.panelDerecha.Size = New System.Drawing.Size(966, 731)
+        Me.panelDerecha.TabIndex = 2
         '
         'panelProductosGrid
         '
         Me.panelProductosGrid.BackColor = System.Drawing.Color.AliceBlue
-        Me.panelProductosGrid.Location = New System.Drawing.Point(12, 327)
+        Me.panelProductosGrid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.panelProductosGrid.Location = New System.Drawing.Point(20, 327)
         Me.panelProductosGrid.Name = "panelProductosGrid"
-        Me.panelProductosGrid.Size = New System.Drawing.Size(939, 349)
+        Me.panelProductosGrid.Size = New System.Drawing.Size(925, 349)
         Me.panelProductosGrid.TabIndex = 5
+        '
+        'panelCategoriasGrid
+        '
+        Me.panelCategoriasGrid.BackColor = System.Drawing.Color.AliceBlue
+        Me.panelCategoriasGrid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.panelCategoriasGrid.Location = New System.Drawing.Point(20, 36)
+        Me.panelCategoriasGrid.Name = "panelCategoriasGrid"
+        Me.panelCategoriasGrid.Size = New System.Drawing.Size(924, 256)
+        Me.panelCategoriasGrid.TabIndex = 4
+        '
+        'lblProductosTitulo
+        '
+        Me.lblProductosTitulo.AutoSize = True
+        Me.lblProductosTitulo.Font = New System.Drawing.Font("Bahnschrift SemiBold SemiConden", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblProductosTitulo.Location = New System.Drawing.Point(433, 295)
+        Me.lblProductosTitulo.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.lblProductosTitulo.Name = "lblProductosTitulo"
+        Me.lblProductosTitulo.Size = New System.Drawing.Size(126, 29)
+        Me.lblProductosTitulo.TabIndex = 2
+        Me.lblProductosTitulo.Text = "PRODUCTOS"
+        '
+        'lblCategoriasTitulo
+        '
+        Me.lblCategoriasTitulo.AutoSize = True
+        Me.lblCategoriasTitulo.Font = New System.Drawing.Font("Bahnschrift SemiBold SemiConden", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCategoriasTitulo.Location = New System.Drawing.Point(433, 5)
+        Me.lblCategoriasTitulo.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.lblCategoriasTitulo.Name = "lblCategoriasTitulo"
+        Me.lblCategoriasTitulo.Size = New System.Drawing.Size(129, 29)
+        Me.lblCategoriasTitulo.TabIndex = 0
+        Me.lblCategoriasTitulo.Text = "CATEGORIAS"
+        '
+        'panelLogin
+        '
+        Me.panelLogin.BackColor = System.Drawing.Color.FloralWhite
+        Me.panelLogin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.panelLogin.Controls.Add(Me.btnSeleccionar)
+        Me.panelLogin.Controls.Add(Me.dgvEmpleados)
+        Me.panelLogin.Controls.Add(Me.lblDNI)
+        Me.panelLogin.Location = New System.Drawing.Point(503, 146)
+        Me.panelLogin.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
+        Me.panelLogin.Name = "panelLogin"
+        Me.panelLogin.Size = New System.Drawing.Size(522, 552)
+        Me.panelLogin.TabIndex = 10
+        '
+        'btnSeleccionar
+        '
+        Me.btnSeleccionar.Font = New System.Drawing.Font("Bahnschrift SemiCondensed", 16.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSeleccionar.Location = New System.Drawing.Point(191, 475)
+        Me.btnSeleccionar.Name = "btnSeleccionar"
+        Me.btnSeleccionar.Size = New System.Drawing.Size(127, 48)
+        Me.btnSeleccionar.TabIndex = 3
+        Me.btnSeleccionar.Text = "ENTRAR"
+        Me.btnSeleccionar.UseVisualStyleBackColor = True
+        '
+        'dgvEmpleados
+        '
+        Me.dgvEmpleados.BackgroundColor = System.Drawing.Color.AliceBlue
+        Me.dgvEmpleados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvEmpleados.Location = New System.Drawing.Point(42, 74)
+        Me.dgvEmpleados.Name = "dgvEmpleados"
+        Me.dgvEmpleados.RowHeadersWidth = 51
+        Me.dgvEmpleados.RowTemplate.Height = 24
+        Me.dgvEmpleados.Size = New System.Drawing.Size(440, 381)
+        Me.dgvEmpleados.TabIndex = 2
+        '
+        'lblDNI
+        '
+        Me.lblDNI.AutoSize = True
+        Me.lblDNI.Font = New System.Drawing.Font("Bahnschrift SemiCondensed", 19.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDNI.Location = New System.Drawing.Point(121, 19)
+        Me.lblDNI.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.lblDNI.Name = "lblDNI"
+        Me.lblDNI.Size = New System.Drawing.Size(344, 40)
+        Me.lblDNI.TabIndex = 1
+        Me.lblDNI.Text = "SELECCIONAR EMPLEADO"
         '
         'TPVCafeteria
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1541, 766)
+        Me.Controls.Add(Me.panelLogin)
         Me.Controls.Add(Me.PanelTPV)
         Me.Font = New System.Drawing.Font("Bahnschrift SemiCondensed", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.Name = "TPVCafeteria"
         Me.Text = "TPV Café Gaupasa"
         Me.PanelTPV.ResumeLayout(False)
-        Me.panelDerecha.ResumeLayout(False)
-        Me.panelDerecha.PerformLayout()
         Me.panelIzquierda.ResumeLayout(False)
         Me.panelIzquierda.PerformLayout()
         Me.panelInferiorIzq.ResumeLayout(False)
@@ -560,6 +638,11 @@ Partial Class TPVCafeteria
         Me.panelHeader.ResumeLayout(False)
         Me.panelHeader.PerformLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.panelDerecha.ResumeLayout(False)
+        Me.panelDerecha.PerformLayout()
+        Me.panelLogin.ResumeLayout(False)
+        Me.panelLogin.PerformLayout()
+        CType(Me.dgvEmpleados, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -592,18 +675,24 @@ Partial Class TPVCafeteria
     Friend WithEvents panelDerecha As Panel
     Friend WithEvents lblCategoriasTitulo As Label
     Friend WithEvents lblProductosTitulo As Label
-    Friend WithEvents btnCerrarSesion As Button
+    Friend WithEvents btnCambiarEmpleado As Button
     Friend WithEvents lblCafeteria As Label
     Friend WithEvents btnCobrar As Button
     Friend WithEvents btnAnularLinea As Button
     Friend WithEvents btnAnularComanda As Button
     Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents lblUsuario As Label
+    Friend WithEvents panelCategoriasGrid As FlowLayoutPanel
+    Friend WithEvents panelProductosGrid As FlowLayoutPanel
+    Friend WithEvents btnStock As Button
+    Friend WithEvents btnTiempo As Button
+    Friend WithEvents panelLogin As Panel
+    Friend WithEvents btnSeleccionar As Button
+    Friend WithEvents dgvEmpleados As DataGridView
+    Friend WithEvents lblDNI As Label
     Friend WithEvents uds As DataGridViewTextBoxColumn
     Friend WithEvents descripcion As DataGridViewTextBoxColumn
     Friend WithEvents precio As DataGridViewTextBoxColumn
     Friend WithEvents dto As DataGridViewTextBoxColumn
     Friend WithEvents total As DataGridViewTextBoxColumn
-    Friend WithEvents panelCategoriasGrid As FlowLayoutPanel
-    Friend WithEvents panelProductosGrid As FlowLayoutPanel
 End Class

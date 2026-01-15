@@ -1,10 +1,6 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Data
 
-' =============================================
-' Clase: EmpleadoDAO
-' Acceso a datos de Empleados usando ADO.NET
-' =============================================
 Public Class EmpleadoDAO
 
     ' Login de empleado
@@ -96,6 +92,34 @@ Public Class EmpleadoDAO
         Return ds
     End Function
 
+    Public Shared Function ObtenerPorId(id As Integer) As Empleado
+        Dim empleado As Empleado = Nothing
+        Dim sql As String = "SELECT idEmpleado, nombre, apellido, dni FROM Empleados WHERE idEmpleado = @id"
+
+        Try
+            Using conn As SqlConnection = ConexionBD.ObtenerConexion()
+                Using cmd As New SqlCommand(sql, conn)
+                    cmd.Parameters.AddWithValue("@id", id)
+                    conn.Open()
+
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
+                        If reader.Read() Then
+                            empleado = New Empleado() With {
+                            .IdEmpleado = Convert.ToInt32(reader("idEmpleado")),
+                            .Nombre = reader("nombre").ToString(),
+                            .Apellido = reader("apellido").ToString(),
+                            .Dni = reader("dni").ToString()
+                        }
+                        End If
+                    End Using
+                End Using
+            End Using
+        Catch ex As Exception
+            Throw New Exception("Error al obtener el empleado: " & ex.Message)
+        End Try
+
+        Return empleado
+    End Function
     ' Insertar nuevo empleado
     Public Shared Function Insertar(empleado As Empleado) As Boolean
         Try

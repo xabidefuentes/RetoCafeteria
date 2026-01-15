@@ -89,6 +89,12 @@
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FORMS\StockForm.Designer.vb">
+      <DependentUpon>StockForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\StockForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FORMS\TPVCafeteria.Designer.vb">
       <DependentUpon>TPVCafeteria.vb</DependentUpon>
     </Compile>
@@ -96,12 +102,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Entidades\LineaComanda.vb" />
-    <Compile Include="FORMS\MenuEmpleados.Designer.vb">
-      <DependentUpon>MenuEmpleados.vb</DependentUpon>
-    </Compile>
-    <Compile Include="FORMS\MenuEmpleados.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -121,11 +121,11 @@
     <Compile Include="Entidades\Producto.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FORMS\StockForm.resx">
+      <DependentUpon>StockForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FORMS\TPVCafeteria.resx">
       <DependentUpon>TPVCafeteria.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FORMS\MenuEmpleados.resx">
-      <DependentUpon>MenuEmpleados.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
