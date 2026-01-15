@@ -16,6 +16,10 @@ Public Class TPVCafeteria
 
     Dim numeroActual As String = ""
     Dim celdaSeleccionada As DataGridViewCell = Nothing
+    Dim cantidadSeleccionada As String = ""
+    Dim descuentoSeleccionado As String = ""
+    Dim modoActual As String = "" ' "CANTIDAD" o "DESCUENTO"
+    Dim filaActual As Integer = -1
 
     Private Sub FormTPV_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = "TPV Café Gaupasa"
@@ -91,7 +95,6 @@ Public Class TPVCafeteria
         dgvTicket.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 14, FontStyle.Bold)
         dgvTicket.RowTemplate.Height = 40
 
-        ' Hacer las columnas editables
         dgvTicket.ReadOnly = False
         dgvTicket.Columns("UDS").ReadOnly = False
         dgvTicket.Columns("Descripcion").ReadOnly = True
@@ -99,25 +102,35 @@ Public Class TPVCafeteria
         dgvTicket.Columns("DTO").ReadOnly = False
         dgvTicket.Columns("Total").ReadOnly = True
 
-        ' Evento para manejar cambios en las celdas
         AddHandler dgvTicket.CellEndEdit, AddressOf dgvTicket_CellEndEdit
         AddHandler dgvTicket.CellClick, AddressOf dgvTicket_CellClick
     End Sub
 
     ' Evento cuando se selecciona una celda
-    Private Sub dgvTicket_CellClick(sender As Object, e As DataGridViewCellEventArgs)
-        ' Verificamos que no sea el encabezado
+    Private Sub dgvTicket_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTicket.CellClick
         If e.RowIndex >= 0 Then
-            Dim nombreColumna As String = dgvTicket.Columns(e.ColumnIndex).Name
+            filaActual = e.RowIndex
+            Dim nombreColumna As String = dgvTicket.Columns(e.ColumnIndex).Name.ToUpper()
+            If nombreColumna = "UDS" Then
+                modoActual = "CANTIDAD"
+                cantidadSeleccionada = ""
+                txtUDS.Text = "0"
 
-            ' SOLO permitimos asignar la celda si es UDS o DTO
-            If nombreColumna = "UDS" OrElse nombreColumna = "DTO" Then
-                celdaSeleccionada = dgvTicket.Rows(e.RowIndex).Cells(e.ColumnIndex)
-                numeroActual = "" ' Reiniciamos para que el nuevo número empiece de cero
-                dgvTicket.CurrentCell = celdaSeleccionada
+                txtUDS.BackColor = Color.LightYellow
+                txtDTO.BackColor = Color.White
+
+            ElseIf nombreColumna = "DTO" OrElse nombreColumna = "DESCUENTO" Then
+                modoActual = "DESCUENTO"
+                descuentoSeleccionado = ""
+                txtDTO.Text = "0%"
+
+                txtDTO.BackColor = Color.LightYellow
+                txtUDS.BackColor = Color.White
             Else
-                ' Si toca cualquier otra celda (como la descripción), anulamos la selección para el teclado
-                celdaSeleccionada = Nothing
+                modoActual = "CANTIDAD"
+                cantidadSeleccionada = ""
+                txtUDS.BackColor = Color.LightYellow
+                txtDTO.BackColor = Color.White
             End If
         End If
     End Sub
@@ -127,7 +140,6 @@ Public Class TPVCafeteria
         Try
             Dim row As DataGridViewRow = dgvTicket.Rows(e.RowIndex)
 
-            ' Recalcular el total de la fila
             Dim cantidad As Integer = CInt(row.Cells("UDS").Value)
             Dim precioStr As String = row.Cells("Precio").Value.ToString().Replace("€", "").Trim()
             Dim precio As Decimal = Decimal.Parse(precioStr)
@@ -139,7 +151,6 @@ Public Class TPVCafeteria
 
             row.Cells("Total").Value = total.ToString("0.00") & "€"
 
-            ' Actualizar totales generales
             ActualizarTotalesGenerales()
 
         Catch ex As Exception
@@ -156,10 +167,8 @@ Public Class TPVCafeteria
 
         For Each row As DataGridViewRow In dgvTicket.Rows
             If row.Cells("UDS").Value IsNot Nothing Then
-                ' Sumar UDS
                 totalUDS += CInt(row.Cells("UDS").Value)
 
-                ' Sumar descuentos
                 Dim dtoStr As String = row.Cells("DTO").Value.ToString().Replace("%", "").Trim()
                 Dim dto As Decimal = Decimal.Parse(dtoStr)
                 If dto > 0 Then
@@ -167,13 +176,11 @@ Public Class TPVCafeteria
                     filasConDescuento += 1
                 End If
 
-                ' Sumar subtotal
                 Dim totalStr As String = row.Cells("Total").Value.ToString().Replace("€", "").Trim()
                 subtotal += Decimal.Parse(totalStr)
             End If
         Next
 
-        ' Actualizar TextBoxes
         txtUDS.Text = totalUDS.ToString()
 
         ' Calcular promedio de descuento
@@ -196,44 +203,105 @@ Public Class TPVCafeteria
         Me.empleadoActual = Nothing
     End Sub
 
+
     Private Sub CargarCategorias()
         Try
             panelCategoriasGrid.Controls.Clear()
-
             Dim categorias As List(Of Categoria) = CategoriaDAO.ObtenerCategoriasProductos()
-
             panelCategoriasGrid.AutoScroll = True
 
             For Each cat As Categoria In categorias
-               If cat.IdCategoria < 1024 Then
-                Dim btnCategoria As New Button()
-                btnCategoria.Text = cat.Nombre.ToUpper()
-                btnCategoria.Font = New Font("Segoe UI", 12, FontStyle.Bold)
-                btnCategoria.Size = New Size(215, 95)
-                btnCategoria.BackColor = ColorVerdePrimario
-                btnCategoria.ForeColor = Color.White
-                btnCategoria.FlatStyle = FlatStyle.Flat
-                btnCategoria.FlatAppearance.BorderSize = 0
-                btnCategoria.Cursor = Cursors.Hand
-                btnCategoria.Margin = New Padding(5)
-                btnCategoria.Tag = cat
+                If cat.IdCategoria < 1024 Then
+                    Dim btnCategoria As New Button()
+                    btnCategoria.Text = cat.Nombre.ToUpper()
+                    btnCategoria.Font = New Font("Segoe UI", 11, FontStyle.Bold)
+                    btnCategoria.Size = New Size(215, 95)
+                    btnCategoria.BackColor = ColorVerdePrimario
+                    btnCategoria.ForeColor = Color.White
+                    btnCategoria.FlatStyle = FlatStyle.Flat
+                    btnCategoria.FlatAppearance.BorderSize = 0
+                    btnCategoria.Cursor = Cursors.Hand
+                    btnCategoria.Margin = New Padding(5)
+                    btnCategoria.Tag = cat
 
-                btnCategoria.TextImageRelation = TextImageRelation.ImageAboveText
-                btnCategoria.ImageAlign = ContentAlignment.TopCenter
-                btnCategoria.TextAlign = ContentAlignment.BottomCenter
+                    btnCategoria.TextImageRelation = TextImageRelation.ImageAboveText
+                    btnCategoria.ImageAlign = ContentAlignment.MiddleCenter
+                    btnCategoria.TextAlign = ContentAlignment.BottomCenter
 
-                AddHandler btnCategoria.MouseEnter, Sub() btnCategoria.BackColor = Color.FromArgb(120, 180, 165)
-                AddHandler btnCategoria.MouseLeave, Sub() btnCategoria.BackColor = ColorVerdePrimario
-                AddHandler btnCategoria.Click, AddressOf BtnCategoria_Click
+                    Try
+                        Dim imagenCategoria As Image = ObtenerImagenCategoria(cat.Nombre, cat.IdCategoria)
+                        If imagenCategoria IsNot Nothing Then
+                            btnCategoria.Image = New Bitmap(imagenCategoria, New Size(68, 68))
+                        End If
+                    Catch imgEx As Exception
+                        Console.WriteLine($"Error al cargar imagen para {cat.Nombre}: {imgEx.Message}")
+                    End Try
 
-                panelCategoriasGrid.Controls.Add(btnCategoria)
-            End If
+                    AddHandler btnCategoria.MouseEnter, Sub() btnCategoria.BackColor = Color.FromArgb(120, 180, 165)
+                    AddHandler btnCategoria.MouseLeave, Sub() btnCategoria.BackColor = ColorVerdePrimario
+                    AddHandler btnCategoria.Click, AddressOf BtnCategoria_Click
+
+                    panelCategoriasGrid.Controls.Add(btnCategoria)
+                End If
             Next
 
         Catch ex As Exception
             MessageBox.Show("Error al cargar categorías: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+    ' Función para obtener la imagen según la categoría
+    Private Function ObtenerImagenCategoria(nombreCategoria As String, idCategoria As Integer) As Image
+        Try
+            Select Case idCategoria
+                Case 1010
+                    Return My.Resources.cafes
+
+                Case 1011
+                    Return My.Resources.infusiones
+
+                Case 1012
+                    Return My.Resources.cervezas
+
+                Case 1013
+                    Return My.Resources.vinos
+
+                Case 1014
+                    Return My.Resources.refrescos
+
+                Case 1015
+                    Return My.Resources.combinados
+
+                Case 1016
+                    Return My.Resources.bocadillos
+
+                Case 1017
+                    Return My.Resources.platos
+
+                Case 1018
+                    Return My.Resources.ensaladas
+
+                Case 1019
+                    Return My.Resources.hamburguesas
+
+                Case 1020
+                    Return My.Resources.sandwiches
+
+                Case 1021
+                    Return My.Resources.entrantes
+
+                Case 1022
+                    Return My.Resources.postres
+
+                Case 1023
+                    Return My.Resources.extras
+            End Select
+
+        Catch ex As Exception
+            Console.WriteLine($"Error al obtener imagen para categoría {idCategoria}: {ex.Message}")
+            Return Nothing
+        End Try
+    End Function
 
     Private Sub BtnCategoria_Click(sender As Object, e As EventArgs)
         Try
@@ -317,7 +385,7 @@ Public Class TPVCafeteria
         Try
             Dim btn As Button = DirectCast(sender, Button)
             Dim producto As Producto = DirectCast(btn.Tag, Producto)
-            Dim cantidad As Integer = 1 ' Por defecto 1
+            Dim cantidad As Integer = 1
 
             If comandaActual Is Nothing OrElse comandaActual.IdComanda = 0 Then
                 comandaActual = New Comanda With {
@@ -374,6 +442,25 @@ Public Class TPVCafeteria
 
             ActualizarTotalesGenerales()
 
+            ' Actualizar la fila actual a la última añadida o modificada
+            If dgvTicket.Rows.Count > 0 Then
+                ' Si acabamos de añadir/modificar, normalmente queremos operar sobre la última fila o la seleccionada
+                If dgvTicket.SelectedRows.Count > 0 Then
+                    filaActual = dgvTicket.SelectedRows(0).Index
+                Else
+                    ' Si no hay selección, asumimos la última fila añadida
+                    filaActual = dgvTicket.Rows.Count - 1
+                    dgvTicket.Rows(filaActual).Selected = True
+                End If
+
+                modoActual = "CANTIDAD"
+                cantidadSeleccionada = ""
+                txtUDS.BackColor = Color.LightYellow
+                txtDTO.BackColor = Color.White
+            End If
+
+            ActualizarTotalesGenerales()
+
         Catch ex As Exception
             MessageBox.Show("Error al agregar producto: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -381,36 +468,143 @@ Public Class TPVCafeteria
 
     ' Teclado numérico
     Private Sub BtnNumero_Click(sender As Object, e As EventArgs) Handles btnNum1.Click, btnNum2.Click, btnNum3.Click, btnNum4.Click, btnNum5.Click, btnNum6.Click, btnNum7.Click, btnNum8.Click, btnNum9.Click, btnNum0.Click
-        If celdaSeleccionada IsNot Nothing Then
-            Dim btn As Button = DirectCast(sender, Button)
+        If filaActual < 0 Then
+            If dgvTicket.Rows.Count > 0 Then
+                ' Si no hay fila, forzamos la primera
+                filaActual = 0
+                dgvTicket.Rows(0).Selected = True
 
-            ' Acumulamos el número
-            numeroActual &= btn.Text
-            celdaSeleccionada.Value = numeroActual
+                If String.IsNullOrEmpty(modoActual) Then
+                    modoActual = "CANTIDAD"
+                    txtUDS.BackColor = Color.LightYellow
+                    txtDTO.BackColor = Color.White
+                End If
+            Else
+                Return
+            End If
+        End If
 
-            ' Llamamos manualmente al evento que calcula la fila actual
-            Dim args As New DataGridViewCellEventArgs(celdaSeleccionada.ColumnIndex, celdaSeleccionada.RowIndex)
-            dgvTicket_CellEndEdit(dgvTicket, args)
+        Dim btn As Button = DirectCast(sender, Button)
+
+        If String.IsNullOrEmpty(modoActual) Then modoActual = "CANTIDAD"
+
+        If modoActual = "CANTIDAD" Then
+            If cantidadSeleccionada = "0" Then cantidadSeleccionada = ""
+
+            cantidadSeleccionada &= btn.Text
+            txtUDS.Text = cantidadSeleccionada
+
+            txtUDS.BackColor = Color.LightYellow
+            txtDTO.BackColor = Color.White
+
+        ElseIf modoActual = "DESCUENTO" Then
+            If descuentoSeleccionado = "0" Then descuentoSeleccionado = ""
+
+            If descuentoSeleccionado.Length < 3 Then
+                descuentoSeleccionado &= btn.Text
+                txtDTO.Text = descuentoSeleccionado & "%"
+            End If
+
+            txtDTO.BackColor = Color.LightYellow
+            txtUDS.BackColor = Color.White
         End If
     End Sub
 
-    Private Sub btnNumX_Click(sender As Object, e As EventArgs) Handles btnNumCancelar.Click
-        If celdaSeleccionada IsNot Nothing Then
-            numeroActual = ""
-            celdaSeleccionada.Value = "0"
+    Private Sub btnNumCancelar_Click(sender As Object, e As EventArgs) Handles btnNumCancelar.Click
+        If modoActual = "CANTIDAD" Then
+            cantidadSeleccionada = ""
+            txtUDS.Text = "0"
+        ElseIf modoActual = "DESCUENTO" Then
+            descuentoSeleccionado = ""
+            txtDTO.Text = "0%"
         End If
     End Sub
 
     Private Sub btnNumConfirmar_Click(sender As Object, e As EventArgs) Handles btnNumConfirmar.Click
-        If celdaSeleccionada IsNot Nothing AndAlso Not String.IsNullOrEmpty(numeroActual) Then
-            celdaSeleccionada.Value = numeroActual
-            numeroActual = ""
-            celdaSeleccionada = Nothing
-            dgvTicket.EndEdit()
+        If filaActual < 0 Then
+            If dgvTicket.Rows.Count > 0 Then
+                filaActual = 0
+            Else
+                Return
+            End If
         End If
+
+        Try
+            If modoActual = "CANTIDAD" OrElse String.IsNullOrEmpty(modoActual) Then
+                If String.IsNullOrEmpty(cantidadSeleccionada) OrElse cantidadSeleccionada = "0" Then
+                    cantidadSeleccionada = "1"
+                End If
+
+                Dim cantidad As Integer = CInt(cantidadSeleccionada)
+
+                If cantidad <= 0 Then
+                    MessageBox.Show("La cantidad debe ser mayor que 0", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
+                End If
+
+                dgvTicket.Rows(filaActual).Cells("UDS").Value = cantidad
+
+                RecalcularFila(filaActual)
+
+                cantidadSeleccionada = ""
+                txtUDS.BackColor = Color.White
+                txtUDS.Text = "0"
+
+            ElseIf modoActual = "DESCUENTO" Then
+                If String.IsNullOrEmpty(descuentoSeleccionado) Then
+                    descuentoSeleccionado = "0"
+                End If
+
+                Dim descuento As Decimal = Decimal.Parse(descuentoSeleccionado)
+
+                If descuento < 0 OrElse descuento > 100 Then
+                    MessageBox.Show("El descuento debe estar entre 0 y 100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
+                End If
+
+                dgvTicket.Rows(filaActual).Cells("DTO").Value = descuento
+
+                RecalcularFila(filaActual)
+
+                descuentoSeleccionado = ""
+                txtDTO.BackColor = Color.White
+                txtDTO.Text = "0%"
+            End If
+
+            ActualizarTotalesGenerales()
+        Catch ex As Exception
+            MessageBox.Show("Error al aplicar el cambio: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
-    ' Anular línea SIN confirmación
+    ' Método auxiliar para recalcular la fila específica
+    Private Sub RecalcularFila(rowIndex As Integer)
+        Try
+            Dim row As DataGridViewRow = dgvTicket.Rows(rowIndex)
+
+            Dim cantidad As Integer = CInt(row.Cells("UDS").Value)
+            Dim precioStr As String = row.Cells("Precio").Value.ToString().Replace("€", "").Trim()
+            Dim precio As Decimal = Decimal.Parse(precioStr)
+            Dim dtoValue As Object = row.Cells("DTO").Value
+            Dim descuento As Decimal = 0
+
+            If dtoValue IsNot Nothing Then
+                Dim dtoStr As String = dtoValue.ToString().Replace("%", "").Trim()
+                If Not String.IsNullOrEmpty(dtoStr) Then
+                    descuento = Decimal.Parse(dtoStr)
+                End If
+            End If
+
+            Dim subtotal As Decimal = cantidad * precio
+            Dim total As Decimal = subtotal * (1 - (descuento / 100))
+
+            row.Cells("Total").Value = total.ToString("0.00") & "€"
+
+        Catch ex As Exception
+            MessageBox.Show("Error al recalcular fila: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     Private Sub btnAnularLinea_Click(sender As Object, e As EventArgs) Handles btnAnularLinea.Click
         If dgvTicket.SelectedRows.Count > 0 Then
             dgvTicket.Rows.RemoveAt(dgvTicket.SelectedRows(0).Index)

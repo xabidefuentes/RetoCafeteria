@@ -625,6 +625,7 @@ Partial Class TPVCafeteria
         Me.Controls.Add(Me.panelLogin)
         Me.Controls.Add(Me.PanelTPV)
         Me.Font = New System.Drawing.Font("Bahnschrift SemiCondensed", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(2, 4, 2, 4)
         Me.Name = "TPVCafeteria"
         Me.Text = "TPV Café Gaupasa"
