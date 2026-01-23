@@ -694,4 +694,8 @@ Public Class TPVCafeteria
     Private Sub btnStock_Click(sender As Object, e As EventArgs) Handles btnStock.Click
         StockForm.Show()
     End Sub
+
+    Private Sub btnTiempo_Click(sender As Object, e As EventArgs) Handles btnTiempo.Click
+        EuskalmetForm.Show()
+    End Sub
 End Class
