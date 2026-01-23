@@ -12,8 +12,6 @@ Public Class EuskalmetForm
             lblTemp.Text = $"Temp: {resultado.temperature} ºC"
             lblLluvia.Text = $"Lluvia: {resultado.precipitation} mm"
             lblViento.Text = $"Viento: {resultado.windSpeed} km/h"
-
-            ' Etiquetas nuevas
             lblLugar.Text = resultado.stationName
             lblFecha.Text = resultado.fechaHora
             lblCondicionTexto.Text = resultado.condicionTexto
@@ -23,7 +21,6 @@ Public Class EuskalmetForm
             Dim estado As String = resultado.condicionTexto
             Dim viento As Double = Convert.ToDouble(resultado.windSpeed)
 
-            ' A) Parte 1: TOLDOS
             Dim fraseToldos As String
             If estado.Equals("SOLEADO") Then
                 fraseToldos = "Abre toldos"
@@ -31,7 +28,6 @@ Public Class EuskalmetForm
                 fraseToldos = "Cierra toldos"
             End If
 
-            ' B) Parte 2: ESTUFA
             Dim fraseEstufa As String
             If temp < 15 Then
                 fraseEstufa = "enciende estufa"
@@ -39,7 +35,6 @@ Public Class EuskalmetForm
                 fraseEstufa = "apaga estufa"
             End If
 
-            ' C) Parte 3: ASPERSORES
             Dim fraseCalor As String
             If temp > 30 Then
                 fraseCalor = "enciende aspersores"
@@ -48,7 +43,6 @@ Public Class EuskalmetForm
                 fraseCalor = "apaga aspersores"
             End If
 
-            ' D) Parte 4: CORTAVIENTOS
             Dim fraseViento As String
             If viento > 20 Then
                 fraseViento = "abre cortavientos"
@@ -56,10 +50,8 @@ Public Class EuskalmetForm
                 fraseViento = "cierra cortavientos"
             End If
 
-            ' FINAL: Unimos todo
             lblOrden.Text = $"{fraseToldos}, {fraseEstufa}, {fraseCalor} y {fraseViento}"
 
-            ' 4. COLORES (Visual)
             If temp < 10 Then
                 lblTemp.ForeColor = Color.Blue
             ElseIf temp > 25 Then
@@ -73,9 +65,6 @@ Public Class EuskalmetForm
         End Try
     End Sub
 
-    ' ---------------------------------------------------------
-    ' BOTÓN 1: DESCARGAR XML
-    ' ---------------------------------------------------------
     Private Async Sub btnXml_Click(sender As Object, e As EventArgs) Handles btnXml.Click
         Try
             Me.Cursor = Cursors.WaitCursor
@@ -99,32 +88,22 @@ Public Class EuskalmetForm
         End Try
     End Sub
 
-    ' ---------------------------------------------------------
-    ' BOTÓN 2: SUBIR A DRIVE
-    ' ---------------------------------------------------------
-    ' ---------------------------------------------------------
-    ' BOTÓN 2: GUARDAR TXT EN RUTA ESPECÍFICA DE DRIVE (G:)
-    ' ---------------------------------------------------------
     Private Async Sub btnDrive_Click(sender As Object, e As EventArgs) Handles btnDrive.Click
         Try
             Me.Cursor = Cursors.WaitCursor
 
-            ' 1. OBTENER DATOS
             Dim datos As EuskalmetDAO = Await EuskalmetService.ObtenerDatosTiempoAsync("Muskiz")
 
-            ' 2. PREPARAR LA RUTA EXACTA
             Dim carpetaDestino As String = "G:\Mi unidad\RetoCafeteria\RMI"
 
-            ' Importante: Si la carpeta no existe, la creamos automáticamente
+            ' Si la carpeta no existe, la creamos automáticamente
             If Not Directory.Exists(carpetaDestino) Then
                 Directory.CreateDirectory(carpetaDestino)
             End If
 
-            ' 3. DEFINIR NOMBRE DEL ARCHIVO (Ej: Informe_Muskiz_20260123.txt)
             Dim nombreArchivo As String = $"Informe_{datos.stationName}.txt"
             Dim rutaFinal As String = Path.Combine(carpetaDestino, nombreArchivo)
 
-            ' 4. ESCRIBIR EL INFORME (Formato TXT)
             Using writer As New StreamWriter(rutaFinal)
                 writer.WriteLine("========================================")
                 writer.WriteLine("       INFORME METEOROLÓGICO            ")
@@ -149,9 +128,6 @@ Public Class EuskalmetForm
         End Try
     End Sub
 
-    ' ---------------------------------------------------------
-    ' BOTÓN 3: DESCARGAR TXT
-    ' ---------------------------------------------------------
     Private Async Sub btnTxt_Click(sender As Object, e As EventArgs) Handles btnTxt.Click
         Try
             Me.Cursor = Cursors.WaitCursor

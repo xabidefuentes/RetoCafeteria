@@ -4,7 +4,6 @@
     Public Property precipitation As Double
     Public Property windSpeed As Double
 
-    ' Estos los rellenaremos nosotros
     Public Property fechaHora As String
     Public Property condicionTexto As String
 End Class
