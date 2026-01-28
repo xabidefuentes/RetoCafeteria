@@ -1,5 +1,6 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
+Imports System.Xml
 
 Public Class TPVCafeteria
     Private empleadoActual As Empleado
@@ -638,7 +639,7 @@ Public Class TPVCafeteria
                       "Cobrar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
 
             ' IDs de las categorías a controlar stock (Infusiones, Cervezas, Vinos, Refrescos, Combinados)
-            Dim categoriasControladas As New List(Of Integer) From {1, 2, 3, 4, 5}
+            Dim categoriasControladas As New List(Of Integer) From {1011, 1012, 1013, 1014, 1015}
             Dim errorStock As Boolean = False
             Dim productosConError As New List(Of String)
 
@@ -647,7 +648,6 @@ Public Class TPVCafeteria
                 Try
                     Dim nombreProducto As String = row.Cells("Descripcion").Value.ToString()
                     Dim cantidad As Integer = CInt(row.Cells("UDS").Value)
-
                     ' Obtener el producto completo para verificar su categoría
                     Dim producto As Producto = ProductoDAO.ObtenerPorNombre(nombreProducto)
 
@@ -680,11 +680,72 @@ Public Class TPVCafeteria
             Else
                 MessageBox.Show("Pago realizado correctamente" & vbCrLf & "Stock actualizado",
                           "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                GenerarTicketXML()
                 dgvTicket.Rows.Clear()
                 ActualizarTotalesGenerales()
                 comandaActual = Nothing
             End If
         End If
+    End Sub
+
+    Private Sub GenerarTicketXML()
+        Try
+            Dim sfd As New SaveFileDialog()
+            sfd.Filter = "Archivos XML (*.xml)|*.xml"
+            sfd.Title = "Guardar Ticket de Compra"
+            sfd.FileName = $"Ticket_{DateTime.Now:yyyyMMdd_HHmmss}.xml"
+
+            If sfd.ShowDialog() <> DialogResult.OK Then
+                Return
+            End If
+
+            Dim rutaCompleta As String = sfd.FileName
+
+            Dim settings As New XmlWriterSettings()
+            settings.Indent = True
+
+            Using writer As XmlWriter = XmlWriter.Create(rutaCompleta, settings)
+                writer.WriteStartDocument()
+                writer.WriteStartElement("Ticket")
+
+                writer.WriteStartElement("Cabecera")
+                writer.WriteElementString("Fecha", DateTime.Now.ToString("dd/MM/yyyy"))
+                writer.WriteElementString("Hora", DateTime.Now.ToString("HH:mm:ss"))
+                If empleadoActual IsNot Nothing Then
+                    writer.WriteElementString("Empleado", empleadoActual.Nombre & " " & empleadoActual.Apellido)
+                Else
+                    writer.WriteElementString("Empleado", "Desconocido")
+                End If
+                writer.WriteEndElement()
+
+                writer.WriteStartElement("Lineas")
+                For Each row As DataGridViewRow In dgvTicket.Rows
+                    If row.Cells("Descripcion").Value IsNot Nothing Then
+                        writer.WriteStartElement("Linea")
+                        writer.WriteElementString("Producto", row.Cells("Descripcion").Value.ToString())
+                        writer.WriteElementString("Cantidad", row.Cells("UDS").Value.ToString())
+                        writer.WriteElementString("PrecioUnitario", row.Cells("Precio").Value.ToString())
+                        writer.WriteElementString("Descuento", row.Cells("DTO").Value.ToString())
+                        writer.WriteElementString("TotalLinea", row.Cells("Total").Value.ToString())
+                        writer.WriteEndElement()
+                    End If
+                Next
+                writer.WriteEndElement()
+
+                writer.WriteStartElement("Totales")
+                writer.WriteElementString("TotalUnidades", txtUDS.Text)
+                writer.WriteElementString("TotalPagar", txtSubtotal.Text)
+                writer.WriteEndElement()
+
+                writer.WriteEndElement()
+                writer.WriteEndDocument()
+            End Using
+
+            MessageBox.Show("Ticket guardado correctamente.", "XML Generado", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+        Catch ex As Exception
+            MessageBox.Show("Error al generar XML: " & ex.Message)
+        End Try
     End Sub
 
     Private Sub CalcularTotales()
