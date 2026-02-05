@@ -109,9 +109,11 @@ Public Class TPVCafeteria
 
     ' Evento cuando se selecciona una celda
     Private Sub dgvTicket_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTicket.CellClick
-        If e.RowIndex >= 0 Then
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex >= 0 Then
+
             filaActual = e.RowIndex
             Dim nombreColumna As String = dgvTicket.Columns(e.ColumnIndex).Name.ToUpper()
+
             If nombreColumna = "UDS" Then
                 modoActual = "CANTIDAD"
                 cantidadSeleccionada = ""
