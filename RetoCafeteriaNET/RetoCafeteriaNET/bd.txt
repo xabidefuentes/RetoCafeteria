@@ -1,0 +1,173 @@
+﻿-- --------------------------------------------------------
+-- CREACIÓN DE LA BASE DE DATOS
+-- --------------------------------------------------------
+
+CREATE DATABASE IF NOT EXISTS cafegaupasa CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE cafegaupasa;
+
+-- --------------------------------------------------------
+-- CONFIGURACIÓN INICIAL
+-- --------------------------------------------------------
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+-- --------------------------------------------------------
+-- ESTRUCTURA Y DATOS
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `categoria`
+--
+
+DROP TABLE IF EXISTS `categoria`;
+CREATE TABLE IF NOT EXISTS `categoria` (
+  `idCategoria` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`idCategoria`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `categoria`
+--
+
+INSERT INTO `categoria` (`idCategoria`, `nombre`) VALUES
+(1, 'Camarero'),
+(2, 'Barra'),
+(3, 'Gerente'),
+(4, 'Cocina'),
+(5, 'Cafés'),
+(6, 'Bebidas'),
+(7, 'Bocadillos'),
+(8, 'Repostería'),
+(9, 'Menús');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `comandas`
+--
+
+DROP TABLE IF EXISTS `comandas`;
+CREATE TABLE IF NOT EXISTS `comandas` (
+  `idComanda` int NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `hora` time NOT NULL,
+  `total` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `idEmpleado` int NOT NULL,
+  PRIMARY KEY (`idComanda`),
+  KEY `idEmpleado` (`idEmpleado`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `empleados`
+--
+
+DROP TABLE IF EXISTS `empleados`;
+CREATE TABLE IF NOT EXISTS `empleados` (
+  `idEmpleado` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `apellido` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dni` varchar(9) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `salario` decimal(10,2) DEFAULT NULL,
+  `fechaAlta` date NOT NULL,
+  `idCategoria` int NOT NULL,
+  PRIMARY KEY (`idEmpleado`),
+  UNIQUE KEY `dni` (`dni`),
+  KEY `idCategoria` (`idCategoria`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `empleados`
+--
+
+INSERT INTO `empleados` (`idEmpleado`, `nombre`, `apellido`, `dni`, `password`, `salario`, `fechaAlta`, `idCategoria`) VALUES
+(1, 'Juan', 'García', '12345678A', '1234', 1200.00, '2024-01-15', 1),
+(2, 'María', 'López', '87654321B', '1234', 1300.00, '2024-02-01', 2),
+(3, 'Pedro', 'Martínez', '11223344C', '1234', 2000.00, '2023-12-01', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `fichaje`
+--
+
+DROP TABLE IF EXISTS `fichaje`;
+CREATE TABLE IF NOT EXISTS `fichaje` (
+  `idFichaje` int NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `horaEntrada` time DEFAULT NULL,
+  `horaSalida` time DEFAULT NULL,
+  `tipo` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `idEmpleado` int NOT NULL,
+  PRIMARY KEY (`idFichaje`),
+  KEY `idEmpleado` (`idEmpleado`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `linea_comandas`
+--
+
+DROP TABLE IF EXISTS `linea_comandas`;
+CREATE TABLE IF NOT EXISTS `linea_comandas` (
+  `idLineaComanda` int NOT NULL AUTO_INCREMENT,
+  `cantidad` int NOT NULL DEFAULT '1',
+  `precio` decimal(10,2) NOT NULL,
+  `idComanda` int NOT NULL,
+  `idProducto` int NOT NULL,
+  PRIMARY KEY (`idLineaComanda`),
+  KEY `idComanda` (`idComanda`),
+  KEY `idProducto` (`idProducto`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos`
+--
+
+DROP TABLE IF EXISTS `productos`;
+CREATE TABLE IF NOT EXISTS `productos` (
+  `idProducto` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `precio` decimal(10,2) NOT NULL,
+  `stock` int NOT NULL DEFAULT '0',
+  `idCategoria` int NOT NULL,
+  PRIMARY KEY (`idProducto`),
+  KEY `idCategoria` (`idCategoria`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `productos`
+--
+
+INSERT INTO `productos` (`idProducto`, `nombre`, `precio`, `stock`, `idCategoria`) VALUES
+(1, 'Café Solo', 1.20, 100, 5),
+(2, 'Café con Leche', 1.50, 100, 5),
+(3, 'Cortado', 1.30, 100, 5),
+(4, 'Cappuccino', 2.50, 100, 5),
+(5, 'Coca Cola', 2.00, 50, 6),
+(6, 'Agua', 1.50, 100, 6),
+(7, 'Zumo Natural', 3.00, 30, 6),
+(8, 'Té', 1.80, 50, 6),
+(9, 'Bocadillo Jamón', 3.50, 20, 7),
+(10, 'Tostada', 2.50, 30, 7),
+(11, 'Croissant', 1.80, 30, 8),
+(12, 'Napolitana', 1.60, 25, 8),
+(13, 'Palmera', 1.50, 20, 8);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

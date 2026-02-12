@@ -220,5 +220,8 @@
   <ItemGroup>
     <Folder Include="Imagenes\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="bd.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
